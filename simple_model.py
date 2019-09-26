@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[7]:
-
-
 import math
 import os
 import random
@@ -11,29 +8,20 @@ import re
 import sys
 
 
-# In[4]:
 
-
-def build_dictionary(dictionary_file_location):
-        text_file = open(dictionary_file_location,"r")
-        full_dictionary = text_file.read().splitlines()
+def build_list_of_lines(file_location):
+        text_file = open(file_location,"r")
+        full = text_file.read().splitlines()
         text_file.close()
-        return full_dictionary
+        return full
 
-
-# In[8]:
 
 
 if __name__ == '__main__':
-    fptr = open(os.environ['OUTPUT_PATH'], 'w')
-
-    dictionary_file_location = input()
-    crypto_file=build_dictionary(dictionary_file_location)
-
-    DD=0
-    N=0
-    CC=0
-
+    sys.stdout.write("Please provide name of .txt file for the code :")
+    file_location = input()
+    crypto_file=build_list_of_lines(file_location)
+    DD,N,CC,key,encrypt,decrypt=0,0,0,0,0,0
     for line in crypto_file :
         if '>>' in line : DD+=1
         if '^' in line : N+=1
@@ -41,10 +29,11 @@ if __name__ == '__main__':
         if 'key' in line : key+=1
         if 'encrypt' in line : encrypt+=1
         if 'decrypt'  in line : decrypt +=1
-
-    fptr.write(' '.join(['>>','^','<<','key','encrypt','decrypt']))
-    result=[DD,N,CC,key,encrypt,decrypt]
-    fptr.write(' '.join(map(str, result)))
-    fptr.write('\n')
-    fptr.close()
+    
+    a=['number of >>','number of ^','number of <<','number of mentions of key','number of mentions of encrypt','number of mentions of decrypt']
+    b=[DD,N,CC,key,encrypt,decrypt]
+    res=list(zip(a,b))
+    for i in res : 
+        sys.stdout.write(str(i[0])+" "+str(i[1]))
+        sys.stdout.write('\n')
 
