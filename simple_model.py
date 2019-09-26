@@ -21,7 +21,7 @@ if __name__ == '__main__':
     sys.stdout.write("Please provide name of .txt file for the code :")
     file_location = input()
     crypto_file=build_list_of_lines(file_location)
-    DD,N,CC,key,encrypt,decrypt,prime=0,0,0,0,0,0,0
+    DD,N,CC,key,encrypt,decrypt,prime,sym,cipher,crypto,passwrd=0,0,0,0,0,0,0,0,0,0,0
     for line in crypto_file :
         if '>>' in line : DD+=1
         if '^' in line : N+=1
@@ -30,8 +30,14 @@ if __name__ == '__main__':
         if 'encrypt' in line : encrypt+=1
         if 'decrypt'  in line : decrypt +=1
         if 'prime' in line : prime +=1
+        if 'symmetric' in line : sym+=1
+        if 'cipher' in line : cipher+=1
+        if 'crypto' in line : crypto +=1
+        if 'password' in line : passwrd +=1 
     
-    a=['number of >>','number of ^','number of <<','number of mentions of key','number of mentions of encrypt','number of mentions of decrypt','number of mentions of prime']
+    a=['number of >>','number of ^','number of <<','number of mentions of key',
+       'number of mentions of encrypt','number of mentions of decrypt','number of mentions of prime'
+      ,'number of mentions of (a)symmetric', 'number of mentions of cipher', 'number of mentions of crypto', 'number of mentions of password']
     b=[DD,N,CC,key,encrypt,decrypt,prime]
     res=list(zip(a,b))
     for i in res : 
