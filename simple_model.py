@@ -38,7 +38,7 @@ if __name__ == '__main__':
     a=['number of >>','number of ^','number of <<','number of mentions of key',
        'number of mentions of encrypt','number of mentions of decrypt','number of mentions of prime'
       ,'number of mentions of (a)symmetric', 'number of mentions of cipher', 'number of mentions of crypto', 'number of mentions of password']
-    b=[DD,N,CC,key,encrypt,decrypt,prime]
+    b=[DD,N,CC,key,encrypt,decrypt,prime,sym,cipher,crypto,passwrd]
     res=list(zip(a,b))
     for i in res : 
         sys.stdout.write(str(i[0])+" "+str(i[1]))
