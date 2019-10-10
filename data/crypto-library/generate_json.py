@@ -30,8 +30,8 @@ for crypto_library in os.listdir(os.getcwd()+'/files/'):
 					with open(os.path.join(path, name),'r') as file_to_read:
 						data = file_to_read.read()
 					file_list.append({
-							'file_path':os.path.join(path, name),
-							'file_content':data
+							'file_name':os.path.join(path, name),
+							'content':data
 						}
 						)
 					library_file_counter += 1
