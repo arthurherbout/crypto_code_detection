@@ -51,7 +51,8 @@ def del_rw(action, name, exc):
     
 def flush_gitclone(): 
     """This deletes the gitclone directory"""
-    shutil.rmtree(DL_DIR, onerror=del_rw)
+    if os.path.exists(DL_DIR):
+        shutil.rmtree(DL_DIR, onerror=del_rw)
     
     
 def file_sampler():
@@ -62,6 +63,7 @@ def file_sampler():
     # Selecting a random repo
     git_url = repo_list[rd.randint(0,len(repo_list)-1)]
     # Cloning that repo
+    flush_gitclone()
     git.Repo.clone_from(git_url, DL_DIR)
     
     pattern = ('.c', '.cpp', '.h', '.hpp','.C', '.cc', '.CPP', '.c++', 
@@ -76,7 +78,6 @@ def file_sampler():
     # if no valid files (very unlikely), we run the function again
     if valid_files==[]:
         flush_gitclone()
-        print("no valid files")
         raise ValueError("No valid files")
     else:
         file_kept = valid_files[rd.randint(0,len(valid_files) - 1)]
@@ -104,7 +105,6 @@ def build_data():
         try: 
             file_sampler()
         except:
-            print("load failed")
             i = i - 1
         i = i + 1 
 
@@ -125,8 +125,8 @@ def build_json():
         json.dump(json_to_save, fp)
    
   
-if os.path.exists(DL_DIR):
-    flush_gitclone()
+
+flush_gitclone()
 flush_data()
 repo_list = load_repo_list()
 build_data()
