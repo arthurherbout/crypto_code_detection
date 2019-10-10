@@ -22,7 +22,7 @@ for filename in os.listdir(files_folder):
      
     data_dict["data"].append(
         {
-            "file_name": filename, "file_content": file_string
+            "file_name": filename, "content": file_string
         }
     )
 
