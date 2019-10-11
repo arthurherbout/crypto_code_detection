@@ -26,7 +26,7 @@ for crypto_library in os.listdir(os.getcwd()+'/files/'):
 			for name in files:
 
 				#We match it with our pattern
-				if fnmatch.fnmatch(name, pattern):
+				if fnmatch.fnmatch(name, "*.c") or fnmatch.fnmatch(name, "*.h"):
 					with open(os.path.join(path, name),'r') as file_to_read:
 						data = file_to_read.read()
 					file_list.append({
@@ -42,8 +42,8 @@ for crypto_library in os.listdir(os.getcwd()+'/files/'):
 
 print("Total number of files extracted: {}".format(len(file_list)))
 
-json_output = [{'data_source':'crypto_library',
+json_output = {'data_source':'crypto_library',
 				'label':1,
-				'data': file_list}]
+				'data': file_list}
 
 json.dump(json_output, open('crypto_library_data.json','w'), indent=4)
