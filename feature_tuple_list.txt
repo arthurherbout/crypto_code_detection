@@ -1,0 +1,43 @@
+number of >> ; >>
+number of ^ ; ^
+number of << ; <<
+number of mentions of key ; key
+number of mentions of encrypt ; encrypt
+number of mentions of decrypt ; decrypt
+number of mentions of prime ; prime
+number of mentions of (a)symmetric ; symmetric
+number of mentions of cipher ; cipher
+number of mentions of crypto ; crypto
+number of mentions of password ; password
+nb of pwd ; pwd
+number of mentions of bits ; bits
+nb of byte ; byte
+number of mentions of generator ; generator
+number of mentions of hash ; hash
+number of mentions of salt ; salt
+number of mentions of garlic ; garlic
+nb of rsa ; rsa
+nb of signature ; signature
+nb of congruent ; congruent
+nb of shuffle ; shuffle
+nb of xor ; xor 
+nb of permutation ; permutation
+nb of nonce ; nonce
+nb of rand ; rand ;
+nb of pseudo ; pseudo 
+nb of bswap ; bswap
+nb of sha256 ; sha256
+nb of modulus ; modulus
+nb of digest ; digest
+nb of restrict ; restrict
+nb of endian ; endian
+library import of cryptolib ; include..crypto
+library import of openssl ; include..openssl
+library import of gnutls ; include..gnutls
+library import of cryptlib ; include..cryptlib
+library import of gcrypt ; include..gcrypt
+library import of sodium ; include..sodium
+library import of nettle ; include..nettle
+library import of nss ; include..nss
+library import of wolfssl ; include..wolfssl
+library import of mbedtls ; include..mbedtls
