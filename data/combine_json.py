@@ -1,16 +1,29 @@
+import os
+import json
 import pandas as pd
 
-BASE_DIR = "C:/Users/coren/columbia/capstone/data/"
-JSON_OUTPUT = "C:/Users/coren/columbia/capstone/data/full_data.json"
+from git_root import git_root
 
-crypto_library_df = pd.read_json(BASE_DIR + "crypto-library/crypto_library_data.json")
-crypto_competitions_df = pd.read_json(BASE_DIR + "crypto_competitions/crypto_competitions_data.json")
-code_jam_df = pd.read_json(BASE_DIR + "code-jam/code-jam_data.json")
-others_df = pd.read_json(BASE_DIR + "others/others_data.json")
+BASE_DIR = os.path.join(git_root(), "data")
+JSON_OUTPUT = os.path.join(BASE_DIR, "full_data.json")
 
-full_df = pd.concat([crypto_library_df, crypto_competitions_df, 
-                     code_jam_df, others_df], 
-                    ignore_index=True)
+crypto_library_df = pd.read_json(
+    os.path.join(BASE_DIR, "crypto-library", "crypto-library_data.json")
+)
+crypto_competitions_df = pd.read_json(
+    os.path.join(BASE_DIR, "crypto-competitions", "crypto-competitions_data.json")
+)
+code_jam_df = pd.read_json(
+    os.path.join(BASE_DIR, "code-jam", "code-jam_data.json")
+)
+others_df = pd.read_json(
+    os.path.join(BASE_DIR, "others", "others_data.json")
+)
+
+full_df = pd.concat(
+    [crypto_library_df, crypto_competitions_df, code_jam_df, others_df], 
+    ignore_index=True
+)
 
 def transform_df(df): 
     """This transform the df formed with the json into the format we want, 
@@ -23,4 +36,5 @@ def transform_df(df):
     return(df)
     
 full_df = transform_df(full_df)
+
 full_df.to_json(JSON_OUTPUT, orient='records')
