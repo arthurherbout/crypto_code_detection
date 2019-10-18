@@ -18,19 +18,25 @@ train = train.drop(columns=["content"])
 feature_dict = {
     "non-regex": {
         "proxy_line": "/n",
+        "proxy_comment": "/*",
+        "proxy_int": "int",
         "proxy_while_loops": "while",
         "proxy_for_loops": "for",
+        "proxy_include": "#include",
         "proxy_bit_left_shift": "<<",
         "proxy_bit_right_shift": ">>",
         "proxy_bitwise_and": "&",
         "proxy_bitwise_or": "|",
         "proxy_complement": "~",
         "proxy_bitwise_xor": "^",
+        "proxy_xor": "xor", 
         "proxy_hexadecimal": "0x",
-    },
-    #"regex": {
-    #    "proxy_function_1": "^\s*(unsigned|signed)?\s+(void|int|char|short|long|float|double)\s+(\w+)\s*\([^)]*\)\s*;",
-    #    "proxy_function_2": "^(\w+( )?){2,}\([^!@#$+%^]+?\)",
+    }#,
+    #"regex": { 
+        #"proxy_function_1": "^\s*(unsigned|signed)?\s+(void|int|char|short|long|float|double)\s+(\w+)\s*\([^)]*\)\s*;",
+        # This next regex is from 
+        # https://stackoverflow.com/questions/476173/regex-to-pull-out-c-function-prototype-declarations
+        #"proxy_function_2": "^(\w+( )?){2,}\([^!@#$+%^]+?\)"
     #}
 }
 
