@@ -1,5 +1,5 @@
 number of >> ; >>
-number of ^ ; ^
+number of ^ ; \^
 number of << ; <<
 number of mentions of key ; key
 number of mentions of encrypt ; encrypt
