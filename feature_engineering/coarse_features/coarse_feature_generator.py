@@ -20,6 +20,7 @@ feature_dict = {
         "proxy_line": "/n",
         "proxy_comment": "/*",
         "proxy_int": "int",
+        "proxy_long": "long",
         "proxy_while_loops": "while",
         "proxy_for_loops": "for",
         "proxy_include": "#include",
