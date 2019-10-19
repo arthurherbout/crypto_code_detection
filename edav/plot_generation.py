@@ -64,11 +64,37 @@ df = df.assign(
 ### Plot ideas 
 # Plotting the number of files in the data for each distinction
 # Plotting the average number of lines (distribution of number of lines is too "squashed" to show properly)
-## -> Possibly facet that by distinction (which ones?) 
+## -> Possibly facet that by distinction (which ones? SEE BELOW) 
+   # by header vs. non header, important
+   # crypto vs. non-crypto
 # Plotting the number of comments and multiline comments (+ distribution)
+   # mmkay why not but don't know how useful (maybe skip for now?)
 # Plotting int counts for crypto vs non crypto (distribution?)
+   # aggregated is enough (total sum per class or sth)
+   # also do for `long`, can be informative maybe
 # Plotting loops counts for crypto vs non crypto 
+   # aggregated is enough
 # Plotting bitwise counts for crypto vs non crypto (distribution?)
 # Plotting top bitwise operations per category
+   # don't really see why this is particularly interesting, maybe skip for now?
 # Plotting number of includes for crypto vs non crypto 
+   # yes!
 # Give top10 include in general case, in crypto case and in non crypto case (have to code that)
+   # sounds interesting
+
+   # For most of these remove comments first to de-noise counts, using:
+
+def remove_comments(string):
+    # remove all occurrences streamed comments (/*COMMENT */) from string
+    string = re.sub(re.compile(r"/\*.*?\*/",re.DOTALL ) , "" , string) 
+    # remove all occurrence single-line comments (//COMMENT\n ) from string
+    string = re.sub(re.compile(r"//.*?\n" ) , "" , string)
+    return string
+
+content_without_comments = content.apply(remove_comments)
+
+   # maybe interesting to plot something else than counts for some of these
+   # since counts are strongly correlated with the file size (which will be very unequal across files)
+   # would be nice to have:
+   #  - binary feature if there is at least one bitwise operation or not in the file (and plot number of file per class that has bitwise ops)
+   #  - binary feature if there is at least one long or not in the file (and plot number of file per class that has longs)
