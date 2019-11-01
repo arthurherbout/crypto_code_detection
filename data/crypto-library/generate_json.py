@@ -33,7 +33,7 @@ for crypto_library in os.listdir(os.path.join(data_folder, 'files')):
 					with open(os.path.join(path, name),'r') as file_to_read:
 						data = file_to_read.read()
 					file_list.append({
-							'file_name':os.path.join(path, name),
+							'file_name':os.path.join(crypto_library, name), #Not an actual path but still a unique identifier
 							'content':data
 						}
 						)

@@ -1,0 +1,186 @@
+[
+    {
+        "data_source": "crypto-library",
+        "file_name": "libsodium/argon2-core.h"
+    },
+    {
+        "data_source": "others",
+        "file_name": "ripemd160.c"
+    },
+    {
+        "data_source": "crypto-library",
+        "file_name": "libgcrypt/cipher-gcm.c"
+    },
+    {
+        "data_source": "crypto-library",
+        "file_name": "libsodium/u8.h"
+    },
+    {
+        "data_source": "crypto-competitions",
+        "file_name": "drysponge_dbg_support.h"
+    },
+    {
+        "data_source": "crypto-competitions",
+        "file_name": "Clefia_data.h"
+    },
+    {
+        "data_source": "others",
+        "file_name": "aes_128_gcm_encrypt.c"
+    },
+    {
+        "data_source": "crypto-competitions",
+        "file_name": "Sha2.h"
+    },
+    {
+        "data_source": "crypto-library",
+        "file_name": "wolfssl/fe_operations.c"
+    },
+    {
+        "data_source": "others",
+        "file_name": "hash_si.c"
+    },
+    {
+        "data_source": "crypto-library",
+        "file_name": "libgcrypt/camellia.h"
+    },
+    {
+        "data_source": "others",
+        "file_name": "lua-aes.c"
+    },
+    {
+        "data_source": "others",
+        "file_name": "uri_unsafe.h"
+    },
+    {
+        "data_source": "crypto-competitions",
+        "file_name": "juliusv1draft_functions.cpp"
+    },
+    {
+        "data_source": "crypto-library",
+        "file_name": "nettle/cast128_sboxes.h"
+    },
+    {
+        "data_source": "others",
+        "file_name": "Crypto.h"
+    },
+    {
+        "data_source": "others",
+        "file_name": "Motion.h"
+    },
+    {
+        "data_source": "crypto-library",
+        "file_name": "nettle/twofishdata.c"
+    },
+    {
+        "data_source": "crypto-competitions",
+        "file_name": "Multi_data.h"
+    },
+    {
+        "data_source": "others",
+        "file_name": "crc32.c"
+    },
+    {
+        "data_source": "others",
+        "file_name": "blowfish.h"
+    },
+    {
+        "data_source": "others",
+        "file_name": "sph_cubehash.h"
+    },
+    {
+        "data_source": "crypto-competitions",
+        "file_name": "KeccakSponge.c"
+    },
+    {
+        "data_source": "others",
+        "file_name": "md5.c"
+    },
+    {
+        "data_source": "others",
+        "file_name": "varsub.c"
+    },
+    {
+        "data_source": "crypto-library",
+        "file_name": "nettle/eccparams.c"
+    },
+    {
+        "data_source": "crypto-library",
+        "file_name": "libsodium/ladder_base_namespace.h"
+    },
+    {
+        "data_source": "crypto-library",
+        "file_name": "libsodium/chacha20_dolbeau-avx2.h"
+    },
+    {
+        "data_source": "crypto-competitions",
+        "file_name": "core.c"
+    },
+    {
+        "data_source": "others",
+        "file_name": "blake2b.c"
+    },
+    {
+        "data_source": "others",
+        "file_name": "bloom.h"
+    },
+    {
+        "data_source": "crypto-competitions",
+        "file_name": "cbc_v2.hh"
+    },
+    {
+        "data_source": "others",
+        "file_name": "strbuf.h"
+    },
+    {
+        "data_source": "others",
+        "file_name": "netbios_query.c"
+    },
+    {
+        "data_source": "crypto-library",
+        "file_name": "libgcrypt/gost-s-box.c"
+    },
+    {
+        "data_source": "crypto-library",
+        "file_name": "open_ssl/i_skey.c"
+    },
+    {
+        "data_source": "others",
+        "file_name": "rsmpi.c"
+    },
+    {
+        "data_source": "crypto-library",
+        "file_name": "wolfssl/tfm.c"
+    },
+    {
+        "data_source": "others",
+        "file_name": "sc25519.c"
+    },
+    {
+        "data_source": "crypto-competitions",
+        "file_name": "turtle.c"
+    },
+    {
+        "data_source": "others",
+        "file_name": "d_ifacea.h"
+    },
+    {
+        "data_source": "others",
+        "file_name": "table_h.c"
+    },
+    {
+        "data_source": "crypto-library",
+        "file_name": "open_ssl/rsa_pk1.c"
+    },
+    {
+        "data_source": "crypto-library",
+        "file_name": "libsodium/ladder_base.h"
+    },
+    {
+        "data_source": "crypto-library",
+        "file_name": "libsodium/ladder.h"
+    },
+    {
+        "data_source": "others",
+        "file_name": "trees.h"
+    }
+]
