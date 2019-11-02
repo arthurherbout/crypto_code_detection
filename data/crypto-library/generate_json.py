@@ -4,21 +4,22 @@ import fnmatch
 
 from git_root import git_root
 
-items_to_exclude = ['.DS_Store','.gitignore','README.md']
+items_to_exclude = [".DS_Store", ".gitignore", "README.md"]
 
 file_list = []
 
 data_folder = os.path.join(git_root(), "data", "crypto-library")
 
 #Read each crypto_library folder
-for crypto_library in os.listdir(os.path.join(data_folder, 'files')):
+for crypto_library in os.listdir(os.path.join(data_folder, "files")):
 
 	library_file_counter = 0
 
 	#Make sure we only look at the library folders
-	if(crypto_library not in items_to_exclude and not (os.path.isfile(os.path.join('files/',crypto_library)))):
+	if(crypto_library not in items_to_exclude and 
+		not (os.path.isfile(os.path.join("files", crypto_library)))):
 
-		root = os.path.join(data_folder, 'files', crypto_library)
+		root = os.path.join(data_folder, "files", crypto_library)
 		pattern = "*.c"
 
 		print("<--- Processing new library --->")
@@ -30,13 +31,23 @@ for crypto_library in os.listdir(os.path.join(data_folder, 'files')):
 
 				#We match it with our pattern
 				if fnmatch.fnmatch(name, "*.c") or fnmatch.fnmatch(name, "*.h"):
+
 					with open(os.path.join(path, name),'r') as file_to_read:
 						data = file_to_read.read()
-					file_list.append({
-							'file_name':os.path.join(crypto_library, name), #Not an actual path but still a unique identifier
-							'content':data
+					
+					path_obj = os.path.normpath(os.path.join(path, name))
+					path_elements = path_obj.split(os.sep)
+            		# the filename will contain the whole path following the 
+					# `files` folder
+					file_name = os.path.join(
+                		*path_elements[path_elements.index('files')+1:]
+            		)
+					file_list.append(
+						{
+							'file_name': file_name,
+							'content': data
 						}
-						)
+					)
 					library_file_counter += 1
 		
 
