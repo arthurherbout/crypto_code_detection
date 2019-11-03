@@ -1,0 +1,4 @@
+{
+    "python.pythonPath": "/anaconda3/envs/crypto/bin/python",
+    "editor.rulers": [80,120]
+}
