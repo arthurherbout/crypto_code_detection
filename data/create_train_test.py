@@ -1,5 +1,4 @@
 import os
-import json
 import pandas as pd
 
 from sklearn.model_selection import train_test_split
@@ -15,13 +14,13 @@ df = pd.read_json(
 
 train, test, _, _ = train_test_split(
     df,
-    df.loc[:, "data_source"],
+    df.loc[:, "label"],
     test_size = .15,
-    stratify= df.loc[:, "data_source"]
+    stratify= df.loc[:, "label"]
 )
 
-train_source_counts = train["data_source"].value_counts()
-test_source_counts = test["data_source"].value_counts()
+train_source_counts = train["label"].value_counts()
+test_source_counts = test["label"].value_counts()
 
 for t in ("train", "test"):
     if t == "train":
