@@ -18,12 +18,14 @@ number of mentions of salt ; salt
 number of mentions of garlic ; garlic
 nb of rsa ; rsa
 nb of signature ; signature
+nb of sign ; sign
+nb of block ; block
 nb of congruent ; congruent
 nb of shuffle ; shuffle
 nb of xor ; xor 
 nb of permutation ; permutation
 nb of nonce ; nonce
-nb of rand ; rand ;
+nb of rand ; rand
 nb of pseudo ; pseudo 
 nb of bswap ; bswap
 nb of sha256 ; sha256
@@ -31,6 +33,9 @@ nb of modulus ; modulus
 nb of digest ; digest
 nb of restrict ; restrict
 nb of endian ; endian
+nb of hexadecimal nbrs ; 0x[0-9A-F]
+nb of % ; %
+nb of msg ; msg
 library import of cryptolib ; include..crypto
 library import of openssl ; include..openssl
 library import of gnutls ; include..gnutls
