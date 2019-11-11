@@ -1,6 +1,9 @@
+Python >= 3.6
 os
 json == 0.1.1
 git_root
 pandas
 numpty
 sklearn
+jsoncomment
+tqdm
