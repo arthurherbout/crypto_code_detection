@@ -9,111 +9,138 @@ from sklearn.metrics import fbeta_score, precision_score, recall_score
 
 from git_root import git_root
 
-
-detector_output = git_root("models", "benchmark", "crypto-detector_output")
-
 sources = ["code-jam", "crypto-library", "crypto-competitions", "others"]
 
-def join_path(source):
-    return os.path.join(
-        detector_output, f"{source}_output.crypto"
-    )
 
-filenames = {source: join_path(source) for source in sources}
+def load_data():
 
-outputs = {source: None for source in sources}
-
-for source in filenames:
-
-    with open(filenames[source]) as data_file:    
-        parser = JsonComment(json)
-        outputs[source] = parser.load(data_file)
-
-# if file has not been detected by crypto-detector (ie. prediction == 0)
-# explanation will be "None"
-detector_results = {
-    "data_source": [], 
-    "file_name": [], 
-    "prediction": [], 
-    "label": [],
-    "explanation": []
-}
-
-def add_to_results(**kwargs):  
-    for arg, value in kwargs.items():
-        detector_results[arg].append(value)
-
-source_to_label = {
-    "code-jam": 0, "others": 0, "crypto-library": 1, "crypto-competitions": 1
-}
-
-explanation_dict = {
-    "reason_for_prediction": "evidence_type",
-    "matched_text": "matched_text",
-    "matched_line": "line_text",
-}
-
-def create_explanation(hit):
-    return {key: hit[explanation_dict[key]] for key in explanation_dict}
-
-# add matches
-# special care to crypto libraries that can have an intracte folder structure
-for source in outputs:
-    lib = False
-    if source == "crypto-library":
-        lib = True
-    outputs_source = outputs[source]["crypto_evidence"]
-    for hashed_key in outputs_source.keys():
-        match = outputs_source[hashed_key]
-        matched_file_abs_path = match["file_paths"][0]
-        if lib:
-            path_obj = os.path.normpath(matched_file_abs_path)
-            path_elements = path_obj.split(os.sep)
-            # the filename will contain the whole path following the `files`
-            # folder
-            matched_filename = os.path.join(
-                *path_elements[path_elements.index('files')+1:]
-            )
-        else:
-            matched_filename = os.path.basename(matched_file_abs_path)
-        explanations = []
-        for hit in match["hits"]:
-            explanations.append(create_explanation(hit))
-        add_to_results(
-            **{ 
-                "data_source": source, 
-                "file_name": matched_filename, 
-                "prediction": 1, 
-                "label": source_to_label[source],
-                "explanation": explanations,
-            }
+    detector_output = git_root("models", "benchmark", "crypto-detector_output")
+    
+    def join_path(source):
+        return os.path.join(
+            detector_output, f"{source}_output.crypto"
         )
 
-partial_results_df = pd.DataFrame(detector_results)
+    filenames = {source: join_path(source) for source in sources}
 
-# add all the other files
-all_data_path = git_root("data", "full_data.json")
-all_data = pd.read_json(all_data_path)[["data_source", "label", "file_name"]]
-all_data["prediction"] = 0
-all_data["explanation"] = None
+    outputs = {source: None for source in sources}
 
-all_results = pd.concat([partial_results_df, all_data], axis=0).\
-    drop_duplicates(subset=["data_source", "file_name"], keep="first")
+    for source in filenames:
+        with open(filenames[source]) as data_file:    
+            parser = JsonComment()
+            outputs[source] = parser.load(data_file)
+    
+    return outputs
 
-# sanity check
-assert(all_results.shape == all_data.shape)
+            
+def fetch_detector_outputs():
+    
+    outputs = load_data()
+    
+    # if file has not been detected by crypto-detector (ie. prediction == 0)
+    # explanation will be "None"
+    detector_results = {
+        "data_source": [], 
+        "file_name": [], 
+        "prediction": [], 
+        "label": []
+    }
 
-# F2 score
-score = fbeta_score(all_results["label"], all_results["prediction"], beta=2)
-print(f"The benchmark F2 score is {score:.3f}")
+    detector_explanations = {
+        "data_source": [], 
+        "file_name": [], 
+        "reason_for_prediction": [],
+        "matched_text": [],
+        "matched_line": []
+    }
 
-# precision
-precision = precision_score(all_results["label"], all_results["prediction"])
-print(f"The benchmark precision is {precision:.3f}")
+    def add_to_results(dictionary, **kwargs):  
+        for arg, value in kwargs.items():
+            dictionary[arg].append(value)
 
-#recall
-recall = recall_score(all_results["label"], all_results["prediction"])
-print(f"The benchmark recall is {recall:.3f}")
+    source_to_label = {
+        "code-jam": 0, "others": 0, "crypto-library": 1, "crypto-competitions": 1
+    }
+
+    explanation_dict = {
+        "reason_for_prediction": "evidence_type",
+        "matched_text": "matched_text",
+        "matched_line": "line_text",
+    }
+
+    def create_explanation(hit):
+        return {key: hit[explanation_dict[key]] for key in explanation_dict}
+
+    # add matches
+    # special care to crypto libraries that can have an intracte folder structure
+    for source in outputs:
+        lib = False
+        if source == "crypto-library":
+            lib = True
+        outputs_source = outputs[source]["crypto_evidence"]
+        for hashed_key in outputs_source.keys():
+            match = outputs_source[hashed_key]
+            matched_file_abs_path = match["file_paths"][0]
+            if lib:
+                path_obj = os.path.normpath(matched_file_abs_path)
+                path_elements = path_obj.split(os.sep)
+                # the filename will contain the whole path following the `files`
+                # folder
+                matched_filename = os.path.join(
+                    *path_elements[path_elements.index('files')+1:]
+                )
+            else:
+                matched_filename = os.path.basename(matched_file_abs_path)
+            for hit in match["hits"]:
+                add_to_results(
+                    detector_explanations, 
+                    **{
+                        **create_explanation(hit), 
+                        "data_source": source, 
+                        "file_name": matched_filename
+                    }
+                )
+            add_to_results(
+                detector_results,
+                **{ 
+                    "data_source": source, 
+                    "file_name": matched_filename, 
+                    "prediction": 1, 
+                    "label": source_to_label[source]
+                }
+            )
+    
+    return pd.DataFrame(detector_results), pd.DataFrame(detector_explanations)
+
+
+def get_all_results(detector_results):
+
+    # add all the other files
+    all_data_path = git_root("data", "full_data.json")
+    all_data = pd.read_json(all_data_path)[["data_source", "label", "file_name"]]
+    all_data["prediction"] = 0
+
+    all_results = pd.concat([detector_results, all_data], axis=0, sort=True).\
+        drop_duplicates(subset=["data_source", "file_name"], keep="first")
+
+    # sanity check
+    assert(all_results.shape == all_data.shape)
+
+    return all_results
+
+
+def print_score(all_results):
+    # F2 score
+    score = fbeta_score(all_results["label"], all_results["prediction"], beta=2)
+    print(f"The benchmark F2 score is {score:.3f}")
+
+    # precision
+    precision = precision_score(all_results["label"], all_results["prediction"])
+    print(f"The benchmark precision is {precision:.3f}")
+
+    # recall
+    recall = recall_score(all_results["label"], all_results["prediction"])
+    print(f"The benchmark recall is {recall:.3f}")
 
 
 
