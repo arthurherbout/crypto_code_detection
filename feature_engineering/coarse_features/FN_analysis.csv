@@ -1,0 +1,14 @@
+type,name,filename,extension,too_short,hexadecimal,lots_of_math,human_could_do_it,keywords,model
+crypto_library,nettle,memops.h,h,1,0,,,,847
+crypto_library,nettle,chacha-set-key.c ,,1,1,,,,847
+crypto_library,nettle,sha3.c,,0,0,,,"big_endian, block",847
+crypto_library,nettle,eddsa-decompress.c,,0,0,,,"mod, bit_size, sign ",847
+crypto_library,nettle,ecc-add-eh.c,,0,0,,,modp,847
+crypto_library,nettle,umac-nh-n.c ,,0,0,,,"key, msg, %",847
+crypto_library,nettle,ecc-224.c ,,1,0,,,"    ecc_Bmodq,
+    ecc_Bmodq_shifted,",847
+crypto_library,nettle,ecc-size.c ,,1,0,,,,847
+crypto_library,nettle,cast128_sboxes.h ,,0,1,,,,847
+crypto_library,nettle,pkcs1-sec-decrypt.c,,,,1,1,,867
+crypto_library,nettle,umac_poly64.c,,,,1,1,,
+crypto_library,nettle,ecc-scalar.c ,,,,0,0,,
