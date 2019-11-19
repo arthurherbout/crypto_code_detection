@@ -7,23 +7,11 @@ import sys
 
 BASE_DIR = os.getcwd()
 DATA_DIR = BASE_DIR + "/files"
+UNTREATED_DIR = BASE_DIR+ "/untreated_crypto"
 JSON_OUTPUT = BASE_DIR + "/full_data.json"
 
 
-def generate_repos_labels():
-    """This takes in a txt file with the repos and their associated label
-    and builds the repo list and the label list"""
-    file = "repos_labels.txt"
-    repo_list = []
-    label_list = []
-    with open(file, 'r') as f:
-        raw_content = f.read()
-    content = raw_content.split("\n")
-    for i in range(len(content)):
-        url, label = content[i].split(",")
-        repo_list.append(url)
-        label_list.append(int(label))
-    return(repo_list, label_list)
+########################### UTILITY FUNCTIONS #################################
 
 
 def del_rw(action, name, exc):
@@ -47,11 +35,40 @@ def cleanup_repo(repo_dir):
     pass
 
 
-def add_repo_to_data(url, label):
-    """This takes in a git url and a label and processes the repo. It downloads 
-    the whole repo, then only keeps the .c and .h files from that repo, and 
-    finally adds those to our data folder, and their contents to the JSON along 
-    with the given label"""
+
+########################### MAIN FUNCTIONS ####################################
+    
+
+def generate_noncrypto_repos():
+    """This takes in a txt file with the repos and their associated label
+    and builds the repo list and the label list"""
+    file = "noncrypto_repos.txt"
+    repo_list = []
+    with open(file, 'r') as f:
+        raw_content = f.read()
+    repo_list = raw_content.split("\n")
+    return(repo_list)
+
+
+def generate_crypto_repos(): 
+    """This looks at the untreated_crypto/all_files folder and generates a nx2 
+    array of username,repo_name for all the repos containing crypto we have 
+    in our dataset"""
+    ret_list = []
+    users = os.listdir(UNTREATED_DIR + "/all_files")
+    for u in users: 
+        dr = UNTREATED_DIR  + "/all_files/" + u
+        repos = os.listdir(dr)
+        for r in repos: 
+            ret_list.append((u, r))
+    return ret_list
+        
+
+def add_noncrypto_repo_to_data(url):
+    """This takes in a git url of a noncrypto repo and processes the repo. It 
+    downloads the whole repo, then only keeps the .c and .h files from that 
+    repo, and finally adds those to our data folder, and their contents to the 
+    JSON, along with a "0" (noncrypto) label."""
     
     data = []
     repo_name = url.split("/")[-1]
@@ -82,7 +99,7 @@ def add_repo_to_data(url, label):
                           "source_username": user_name, 
                           "source_repo": repo_name,
                           "file_path": relative_file_path,
-                          "label": label, 
+                          "label": 0, 
                           "content": content
                           }
                 data.append(dentry)
@@ -92,27 +109,91 @@ def add_repo_to_data(url, label):
     # We delete all the empty directories to make the folder easier to navigate
     cleanup_repo(target_dir)
     return(data)
+
+
+def add_crypto_repo_to_data(user_name, repo_name): 
+    """This takes in the username/repo_name data of a crypto repo, which will 
+    already be downloaded locally because of the hand-labelling we have to do. 
+    It looks at both versions of the repo, the one with all files and the one
+    where the crypto files have been deleted. It adds the .c and .h files to 
+    the JSON with the right label (1 if the file is only in the "all_files" 
+    version and 0 if the file is in both versions), then copies the full repo
+    over to the data folder, while only keeping the .c and .h files."""
+    
+    data = []
+    allfiles = UNTREATED_DIR + "/all_files/" + user_name + "/" + repo_name
+    nocrypto = UNTREATED_DIR + "/no_crypto_files/" + user_name + "/" + repo_name
+    
+    # Patterns used to only keep C files and also to identify header files
+    pattern = ('.c', '.h', '.C', '.H')
+    header_pattern = ('.h', '.H')
+    
+    for path, subdir, files in os.walk(allfiles):
+        for name in files:
+            if name.endswith(pattern):
+                
+                # If file also exists in the repo without crypto, give label 0
+                # otherwise, give label 1.
+                nocrypto_path = path.replace(allfiles, nocrypto) + "/" + name
+                if os.path.isfile(nocrypto_path):
+                    label = 0 
+                else: 
+                    label = 1 
+                
+                # Add to data
+                is_header = name.endswith(header_pattern)
+                relative_path = path.replace(UNTREATED_DIR + "/all_files", '')
+                
+                with open(path + "/" + name, 'r', errors='replace') as f: 
+                    content = f.read()
+                dentry = {"file_name": name, 
+                          "is_header": is_header, 
+                          "source_username": user_name, 
+                          "source_repo": repo_name,
+                          "file_path": relative_path,
+                          "label": label, 
+                          "content": content
+                          }
+                data.append(dentry)
+                
+                
+                # Copy the file (keeping the repo structure) over to the data 
+                # folder
+                new_path = path.replace(UNTREATED_DIR + "/all_files", DATA_DIR)
+                os.makedirs(new_path, exist_ok=True)
+                shutil.copyfile(path + "/" + name, new_path + "/" + name)
+    return(data)
     
 
 def build_data_and_json(): 
     """This populates the data directory and builds the JSON at the same time"""
     flush_data()
     os.mkdir(DATA_DIR)
-    repos, labels = generate_repos_labels()
     json_to_save = []
-    n = len(repos)
+    
+    ### NONCRYPTO
+    
+    noncrypto_repos = generate_noncrypto_repos()
+    crypto_repos = generate_crypto_repos()
+    n = len(noncrypto_repos) + len(crypto_repos)
+    
     for i in range(n): 
-        repo = repos[i]
-        label = labels[i]
         
         sys.stdout.write("\rLoading repo " + str(i+1) + "/" + str(n))
         sys.stdout.flush()
         
-        dentry = add_repo_to_data(repo, label)
+        if i < len(noncrypto_repos): 
+            repo = noncrypto_repos[i]
+            dentry = add_noncrypto_repo_to_data(repo)
+            
+        else: 
+            repo = crypto_repos[i - len(noncrypto_repos)]
+            dentry = add_crypto_repo_to_data(repo[0], repo[1])
+        
         json_to_save.extend(dentry)
+
         
     with open(JSON_OUTPUT, 'w') as fp:
         json.dump(json_to_save, fp)
     
-  
 build_data_and_json()

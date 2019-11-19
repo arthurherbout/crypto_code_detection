@@ -1,2 +1,0 @@
-https://github.com/jedisct1/libsodium,1
-https://github.com/digitalbazaar/forge,1
