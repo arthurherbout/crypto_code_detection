@@ -21,7 +21,5 @@ full_df = pd.concat(
     ignore_index=True
 )
 
-### TODO: DROP FEATURES
-
 full_df.to_json(JSON_OUTPUT, orient='records')
 
