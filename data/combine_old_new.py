@@ -16,6 +16,8 @@ new_df = pd.read_json(
 
 new_df.drop(columns=["source_username", "source_repo", "file_path"])
 
+old_df.drop(columns=["is_header"])
+
 full_df = pd.concat(
     [old_df, new_df], 
     ignore_index=True

@@ -1,0 +1,12 @@
+language: ruby
+rvm:
+  - 2.0.0
+
+script: 'CODECLIMATE_REPO_TOKEN=5fe43105cb9861b4b478597b3a03666eeec71eeffc39bd64cab3552e2c36c238 bundle exec rake'
+
+notifications:
+  email:
+    recipients:
+      - ps@patriciodossantos.net
+    on_failure: change
+    on_success: never

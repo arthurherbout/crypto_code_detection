@@ -32,12 +32,10 @@ https://github.com/libnet/libnet
 https://github.com/holmium/dnsforwarder
 https://github.com/mwarning/KadNode
 https://github.com/gdnsd/gdnsd
-https://github.com/pi-hole/FTL
 https://github.com/abba23/spotify-adblock-linux
 https://github.com/mkchoi212/bitbuf
 https://github.com/ph4r05/bitarray
 https://github.com/pbondoer/42-fillit-bitwise
 https://github.com/cxy1997/Bit-Manipulations-and-CPU-Pipeline-Optimization
 https://github.com/luisbg/hhgtg
-https://github.com/bgoncharuck/stuaa/blob/master/Clang/stuaa.c
 https://github.com/ervaibhavkumar/C-Programs

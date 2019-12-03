@@ -83,19 +83,16 @@ def add_noncrypto_repo_to_data(url):
     # cause problems in the future 
     shutil.rmtree(target_dir + "/.git", onerror=del_rw)
     
-    pattern = ('.c', '.h', '.C', '.H')
-    header_pattern = ('.h', '.H')
+    pattern = ('.c', '.cpp')
     # We only keep C files in our data. 
     # We delete all the files that don't have the right extension
     for path, subdir, files in os.walk(target_dir):
         for name in files:
-            if name.endswith(pattern):
-                is_header = name.endswith(header_pattern)
+            if name.lower().endswith(pattern):
                 relative_file_path = path.replace(target_dir, '')
                 with open(path + "/" + name, 'r', errors='replace') as f: 
                     content = f.read()
                 dentry = {"file_name": name, 
-                          "is_header": is_header, 
                           "source_username": user_name, 
                           "source_repo": repo_name,
                           "file_path": relative_file_path,
@@ -125,12 +122,11 @@ def add_crypto_repo_to_data(user_name, repo_name):
     nocrypto = UNTREATED_DIR + "/no_crypto_files/" + user_name + "/" + repo_name
     
     # Patterns used to only keep C files and also to identify header files
-    pattern = ('.c', '.h', '.C', '.H')
-    header_pattern = ('.h', '.H')
+    pattern = ('.c', '.cpp')
     
     for path, subdir, files in os.walk(allfiles):
         for name in files:
-            if name.endswith(pattern):
+            if name.lower().endswith(pattern):
                 
                 # If file also exists in the repo without crypto, give label 0
                 # otherwise, give label 1.
@@ -141,15 +137,13 @@ def add_crypto_repo_to_data(user_name, repo_name):
                     label = 1 
                 
                 # Add to data
-                is_header = name.endswith(header_pattern)
                 relative_path = path.replace(UNTREATED_DIR + "/all_files", '')
                 
                 with open(path + "/" + name, 'r', errors='replace') as f: 
                     content = f.read()
                 dentry = {"data_source": "github",
                           "label": label, 
-                          "file_name": name, 
-                          "is_header": is_header, 
+                          "file_name": name,
                           "source_username": user_name, 
                           "source_repo": repo_name,
                           "file_path": relative_path,
