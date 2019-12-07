@@ -6,9 +6,6 @@ from git_root import git_root
 BASE_DIR = os.path.join(git_root(), "data", "old_data")
 JSON_OUTPUT = os.path.join(BASE_DIR, "old_data.json")
 
-crypto_library_df = pd.read_json(
-    os.path.join(BASE_DIR, "crypto-library", "crypto-library_data.json")
-)
 crypto_competitions_df = pd.read_json(
     os.path.join(BASE_DIR, "crypto-competitions", "crypto-competitions_data.json")
 )
@@ -17,7 +14,7 @@ code_jam_df = pd.read_json(
 )
 
 full_df = pd.concat(
-    [crypto_library_df, crypto_competitions_df, code_jam_df], 
+    [crypto_competitions_df, code_jam_df], 
     ignore_index=True
 )
 

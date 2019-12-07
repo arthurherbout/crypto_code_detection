@@ -11,7 +11,7 @@ old_df = pd.read_json(
 )
 
 new_df = pd.read_json(
-    os.path.join(BASE_DIR, "new_data", "new_data.json")
+    os.path.join(BASE_DIR, "new_data", "full_data.json")
 )
 
 new_df.drop(columns=["source_username", "source_repo", "file_path"])
