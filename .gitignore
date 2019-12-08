@@ -1,2 +1,5 @@
 .DS_store
 .ipynb_checkpoints*
+data/full_data.json
+data/full_data_v1.json
+data/full_data_v2.json
