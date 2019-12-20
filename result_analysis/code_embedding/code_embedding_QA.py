@@ -15,13 +15,14 @@ from tensorflow.keras import backend as K
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Flatten, Dense, Dropout
 from tensorflow.keras.layers import Embedding
+from tensorflow.keras.optimizers import Adam
 
 from sklearn.model_selection import train_test_split
 
 from git_root import git_root
 
 data_folder = os.path.join(git_root(), "data")
-dataframe = pd.read_json(os.path.join(data_folder,'full_data.json'))
+dataframe = pd.read_json(os.path.join(data_folder,'full_data_v2.json'))
 
 def remove_comments(string):
 	# remove all occurrences streamed comments (/*COMMENT */) from string
@@ -56,7 +57,6 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 NUM_WORDS = 10000
 
 tokenizer = Tokenizer(num_words=NUM_WORDS, 
-					 filters='\t\n,', 
 					 lower=True, 
 					 split=' ', 
 					 char_level=False)
@@ -71,7 +71,7 @@ sequences = tokenizer.texts_to_sequences(docs)
 len_seqs = [len(s) for s in sequences]
 print("Sequences: mean={}, std={}, max={}".format(np.mean(len_seqs), np.std(len_seqs), np.max(len_seqs)))
 
-MAX_LENGTH = 1000
+MAX_LENGTH = 2000
 
 
 # Dictionary to transform a vector back to the program:
@@ -109,20 +109,19 @@ def f2(y_true, y_pred):
 	recall = recall_(y_true, y_pred)
 	return 5*((precision*recall)/(4*precision+recall+K.epsilon()))
 
-
-
 # define the model
 model = Sequential()
 model.add(Embedding(NUM_WORDS, 50, input_length=MAX_LENGTH))
 model.add(Flatten())
-model.add(Dropout(rate=0.3))
+model.add(Dropout(rate=0.4))
 model.add(Dense(1, activation='sigmoid'))
-	
-model.compile(optimizer='adam', 
-				  loss='binary_crossentropy', 
-				  metrics=['acc', f1,f2,precision_,recall_])
+    
+model.compile(optimizer=Adam(learning_rate=5e-5), 
+                  loss='binary_crossentropy', 
+                  metrics=['acc', f1,f2,precision_,recall_])
 
 print(model.summary())
+
 
 
 
@@ -167,9 +166,11 @@ X_train, X_test, y_train, y_test,train_idx, test_idx = train_test_split(padded_d
 # fit the model
 
 history = model.fit(X_train, 
-		  y_train,
-		  epochs=5,
-		  validation_data=(X_test,y_test))
+          y_train,
+          epochs=1,
+          validation_data=(X_test,y_test),
+        class_weight = {0: 1.,
+                1: 10.})
 
 
 # # Result QA
@@ -192,6 +193,7 @@ sources = []
 for elem in y_false:
 	sources.append(dataframe.loc[test_idx[elem],'data_source'])
 	false_pred.append({"data_source": dataframe.loc[test_idx[elem],'data_source'],
+							'label': int(dataframe.loc[test_idx[elem],'label']),
 							'file_name': dataframe.loc[test_idx[elem],'file_name']})
 
 
@@ -200,25 +202,11 @@ result_folder = os.path.join(git_root(), "result_analysis","code_embedding")
 with open(os.path.join(result_folder,"code_embedding_false_pred.json"),'w') as outfile:
 	json.dump(false_pred,outfile,indent=4)
 
-print("Number of False from others: {}".format(sources.count("others")))
+print("Number of False from others: {}".format(sources.count("github")))
 print("Number of False from crypto-competitions: {}".format(sources.count("crypto-competitions")))
 print("Number of False from crypto-library: {}".format(sources.count("crypto-library")))
 print("Number of False from code-jam: {}".format(sources.count("code-jam")))
 
-
-header_count = 0
-header_0 = 0
-header_1 = 0
-for elem in y_false:
-	if(dataframe.loc[test_idx[elem],'is_header']):
-		header_count += 1
-		if(dataframe.loc[test_idx[elem],'label']==1):
-			header_1 += 1
-		else:
-			header_0 += 1
-print("Proportion of header files in False Preds: {:.3f}%".format((header_count/len(y_false))*100))
-print("Proportion of False Preds header file to belong to non-crypto: {:.2f}%".format(100*(header_0/header_count)))
-print("Proportion of False Preds header file to belong to crypto: {:.2f}%".format(100*(header_1/header_count)))
 
 
 
